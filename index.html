@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Weather App</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div id="weather"></div>
+
+    <script>
+      $(document).ready(function () {
+        var apiKey = "5d066958a60d315387d9492393935c19";
+        var city = "Kyiv";
+        var apiUrl =
+          "http://api.openweathermap.org/data/2.5/weather?q=" +
+          city +
+          "&units=metric&APPID=" +
+          apiKey;
+
+        $.ajax({
+          url: apiUrl,
+          method: "GET",
+          success: function (data) {
+            var weatherInfo = {
+              temp: data.main.temp,
+              pressure: data.main.pressure,
+              description: data.weather[0].description,
+              humidity: data.main.humidity,
+              speed: data.wind.speed,
+              deg: data.wind.deg,
+              icon:
+                "http://openweathermap.org/img/w/" +
+                data.weather[0].icon +
+                ".png",
+            };
+
+            var weatherHtml = `
+                <h2>Weather in ${city}</h2>
+                <p>Temperature: ${weatherInfo.temp}°C</p>
+                <p>Pressure: ${weatherInfo.pressure} hPa</p>
+                <p>Description: ${weatherInfo.description}</p>
+                <p>Humidity: ${weatherInfo.humidity}%</p>
+                <p>Wind Speed: ${weatherInfo.speed} m/s</p>
+                <p>Wind Direction: ${weatherInfo.deg}°</p>
+                <img src="${weatherInfo.icon}" alt="Weather Icon">
+            `;
+
+            $("#weather").html(weatherHtml);
+          },
+          error: function () {
+            $("#weather").html("<p>Error loading weather data.</p>");
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
